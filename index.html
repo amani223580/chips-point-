@@ -60,6 +60,7 @@ a{color:var(--pri-d)}
 <script>
 const SB_URL='https://jsqffovxcvjvvwjhnxvk.supabase.co';
 const SB_KEY='sb_publishable_xYhTF-edNvfZ8HsUXiIi8Q_8IMriuYu';
+  const IS_RECOVERY=/type=recovery/.test(location.hash);
 const sb=supabase.createClient(SB_URL,SB_KEY);
 const app=document.getElementById('app');
 const G=id=>document.getElementById(id);
@@ -619,7 +620,7 @@ function recoveryView(){app.innerHTML=`<div class="card"><h2>Weka nenosiri jipya
   if(h==='#admin'||h==='#dashboard')return admin();
   // one link for everyone: a logged-in owner lands on the dashboard, customers on the menu
   const {data:{session}}=await sb.auth.getSession();
-  if(recovering)return;
+  if(recovering||IS_RECOVERY){recovering=true;return recoveryView()}
   if(session){const {data:m}=await sb.from('business_members').select('business_id').eq('user_id',session.user.id).limit(1);if(m&&m.length)return admin()}
   shop();
 })();
